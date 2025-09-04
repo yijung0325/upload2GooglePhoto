@@ -1,0 +1,18 @@
+{
+  "route_mode": "first_dir_account",
+  "strict_routing": true,
+  "album": { "mode": "second_level", "flat": false, "suffix_if_conflict": null },
+  "accounts": [
+    {
+      "name": "qiwen",
+      "credentials_file": "~/.config/gphotos_uploader/credentials_qiwen.json",
+      "token_file": "~/.config/gphotos_uploader/token_qiwen.json"
+    },
+    {
+      "name": "loyen",
+      "credentials_file": "~/.config/gphotos_uploader/credentials_loyen.json",
+      "token_file": "~/.config/gphotos_uploader/token_loyen.json"
+    }
+  ]
+}
+
