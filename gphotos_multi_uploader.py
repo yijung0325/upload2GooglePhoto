@@ -242,14 +242,22 @@ def ensure_album(creds: Credentials, album_title: str, cache: Dict[str, str],
 
 # ------------------------ 上傳 ------------------------
 
-def upload_bytes(creds: Credentials, file_path: Path, max_retries: int = 3) -> str:
+def upload_bytes(creds, file_path: Path, max_retries: int = 3) -> str:
     url = f"{PHOTOS_API}/v1/uploads"
+    # 先不要放 X-Goog-Upload-File-Name
     headers = {
         **auth_header(creds),
         "Content-type": "application/octet-stream",
-        "X-Goog-Upload-File-Name": file_path.name,
         "X-Goog-Upload-Protocol": "raw",
     }
+    # 只有能以 latin-1 表示時才加檔名 header；否則省略，讓 batchCreate 的 JSON fileName 決定顯示名稱
+    try:
+        file_path.name.encode("latin-1")
+    except UnicodeEncodeError:
+        pass
+    else:
+        headers["X-Goog-Upload-File-Name"] = file_path.name
+
     data = file_path.read_bytes()
     for attempt in range(1, max_retries + 1):
         r = requests.post(url, headers=headers, data=data, timeout=120)
